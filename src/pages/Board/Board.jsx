@@ -1,4 +1,24 @@
+import {nanoid} from "nanoid"
+import {useState} from "react"
+import Row from "../../components/Row"
 const PageBoard = () => {
+    const [taskField, setTaskField] = useState('') 
+    const [tasks,setTasks] = useState([])
+    const handleSubmit = (e) => {
+        e.preventDefault()
+if (taskField.trim().length=== 0|| taskField.trim().length > 30) return
+        const newTack = {
+            id: nanoid(),
+        title: taskField.trim(),
+        storyPoints: 0,
+        done: false
+        
+        }
+        setTasks([...tasks, newTack])
+
+        setTaskField("")
+         }
+
     return (
         <section className="page active" id="page-board">
             <div className="page-header">
@@ -44,58 +64,25 @@ const PageBoard = () => {
                 className="mount-wrap"
                 data-hook="1.6 array · 1.1 counter · 1.5 functional update">
                 <div className="mount-point" id="mount-tasklist">
-                    <div className="add-task-row">
+                    <form onSubmit ={handleSubmit} className="add-task-row">
                         <input
                             className="input grow"
+                            name ="task"
+                            value = {taskField}
+                            onChange={(e) =>setTaskField(e.target.value)}
                             placeholder="Add a task and press Enter..."
                         />
                         <button className="btn">Add</button>
-                    </div>
+                    </form>
                     <div className="task-list">
-                        <div className="task-row">
-                            <button className="task-check"></button>
-                            <span className="task-title">
-                                Migrate onboarding flow to new design
-                            </span>
-                            <div className="estimate-stepper">
-                                <button className="stepper-btn">−</button>
-                                <span className="stepper-value">3</span>
-                                <button className="stepper-btn">+</button>
-                            </div>
-                            <button className="quick-bump">+2</button>
-                            <button className="icon-danger">✕</button>
-                        </div>
-                        <div className="task-row">
-                            <button className="task-check checked">✓</button>
-                            <span className="task-title done">
-                                Write API docs for /webhooks
-                            </span>
-                            <div className="estimate-stepper">
-                                <button className="stepper-btn">−</button>
-                                <span className="stepper-value">5</span>
-                                <button className="stepper-btn">+</button>
-                            </div>
-                            <button className="quick-bump">+2</button>
-                            <button className="icon-danger">✕</button>
-                        </div>
-                        <div className="task-row">
-                            <button className="task-check"></button>
-                            <span className="task-title">
-                                Fix flaky retry test in queue worker
-                            </span>
-                            <div className="estimate-stepper">
-                                <button className="stepper-btn">−</button>
-                                <span className="stepper-value">2</span>
-                                <button className="stepper-btn">+</button>
-                            </div>
-                            <button className="quick-bump">+2</button>
-                            <button className="icon-danger">✕</button>
+                       
+                      {tasks.map((task,i) => <Row {...task} key={i} setTasks = {setTasks}/>)}
                         </div>
                     </div>
                 </div>
-            </div>
+            
         </section>
     )
-}
 
+}
 export default PageBoard
